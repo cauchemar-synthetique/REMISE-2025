@@ -126,6 +126,25 @@ public (active)
 - principe du moindre privilège encore et encore !
 - pas besoin qu'un port soit ouvert si aucun service n'écoute dessus
 
+  ```ps
+[cauchemar@node1 ~]$ sudo firewall-cmd --list-all
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: ens160
+  sources:
+  services:
+  ports: 22/tcp
+  protocols:
+  forward: yes
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
+[cauchemar@node1 ~]$
+```
+
 🌞 **Pour toutes les applications qui sont en écoute sur TOUTES les adresses IP**
 
 - dans Linux, ce sont les applications qui écoutent sur la pseudo-adresse IP `0.0.0.0` : ça signifie que toutes les adresses IP de la machine sont concernées
