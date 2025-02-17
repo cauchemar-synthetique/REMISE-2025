@@ -1,7 +1,7 @@
 # Part I : Rocky install
 
 🌞 **Prouvez que le schéma de partitionnement a bien été appliqué**
-
+```ps
 PS C:\WINDOWS\system32> ssh cauchemar@10.1.1.11
 cauchemar@10.1.1.11's password:
 Last login: Mon Feb 17 14:42:08 2025
@@ -28,7 +28,7 @@ tmpfs                726M  9.0M  717M   2% /run
 /dev/mapper/rl-home  4.9G   44K  4.6G   1% /home
 tmpfs                363M     0  363M   0% /run/user/1000
 [cauchemar@localhost ~]$
-
+```ps
 ➜ Par défaut, sous Rocky Linux :
 
 - il existe un groupe appelé `wheel` déjà créé à l'installation
