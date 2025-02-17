@@ -28,7 +28,8 @@ tmpfs                726M  9.0M  717M   2% /run
 /dev/mapper/rl-home  4.9G   44K  4.6G   1% /home
 tmpfs                363M     0  363M   0% /run/user/1000
 [cauchemar@localhost ~]$
-```ps
+
+```
 ➜ Par défaut, sous Rocky Linux :
 
 - il existe un groupe appelé `wheel` déjà créé à l'installation
@@ -37,29 +38,39 @@ tmpfs                363M     0  363M   0% /run/user/1000
 🌞 **Mettre en évidence la ligne de configuration `sudo` qui concerne le groupe `wheel`**
 
 - avec un `cat TRUC | grep TRUC` je veux voir que la bonne ligne
+```ps
 
 [cauchemar@localhost ~]$ sudo cat /etc/sudoers | grep -E '^[^#]*wheel'
 [sudo] password for cauchemar:
 %wheel  ALL=(ALL)       ALL
 [cauchemar@localhost ~]$
 
+```
 🌞 **Prouvez que votre utilisateur est bien dans le groupe `wheel`**
+
+```ps
 
 [cauchemar@localhost ~]$ groups
 cauchemar wheel
 [cauchemar@localhost ~]$
 
+```
+
 🌞 **Prouvez que la langue configurée pour l'OS est bien l'anglais**
 
+```ps
 [cauchemar@localhost ~]$ echo $LANG
 C.UTF-8
 [cauchemar@localhost ~]$
+
+```
 
 - je veux une ligne de commande qui affiche la langue actuelle de l'OS
 - que vos messages d'erreur soient en anglais ça me suffit pas ;D
 
 🌞 **Prouvez que le firewall est déjà actif**
 
+```ps
 [cauchemar@localhost ~]$ sudo systemctl status firewalld
 ● firewalld.service - firewalld - dynamic firewall daemon
      Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; preset: enabled)
@@ -77,3 +88,5 @@ Feb 17 14:41:19 localhost systemd[1]: Started firewalld - dynamic firewall daemo
 [cauchemar@localhost ~]$
 
 - le service de firewalling s'appelle `firewalld` sous Rocky (on le manipule avec la commande `firewall-cmd`)
+
+```
