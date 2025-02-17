@@ -55,6 +55,7 @@ NETMASK=255.255.255.0
 🌞 **Attribuer le nom `node1.tp1.b3` à la VM**
 
 - ça se fait avec une commande `hostnamectl` en 2025 svp
+- 
 ```ps
 sudo hostnamectl set-hostname node1.tp1.b3
 
@@ -67,23 +68,27 @@ node1.tp1.b3
 ## 2. Listening ports
 
 🌞 **Déterminer la liste des programmes qui écoutent sur un port TCP**
+
 ```ps
 [cauchemar@localhost network-scripts]$ ss -tlen
 State   Recv-Q  Send-Q   Local Address:Port   Peer Address:Port  Process
 LISTEN  0       128            0.0.0.0:22          0.0.0.0:*      ino:21256 sk:2 cgroup:/system.slice/sshd.service <->
 LISTEN  0       128               [::]:22             [::]:*      ino:21258 sk:3 cgroup:/system.slice/sshd.service v6only:1 <->
 [cauchemar@localhost network-scripts]$
+
 ```
 
 🌞 **Déterminer la liste des programmes qui écoutent sur un port UDP**
+
 ```ps
+
 [cauchemar@localhost network-scripts]$ ss -ulen
 State  Recv-Q  Send-Q   Local Address:Port   Peer Address:Port Process
 UNCONN 0       0            127.0.0.1:323         0.0.0.0:*     ino:20059 sk:4 cgroup:/system.slice/chronyd.service <->
 UNCONN 0       0                [::1]:323            [::]:*     ino:20060 sk:5 cgroup:/system.slice/chronyd.service v6only:1 <->
 [cauchemar@localhost network-scripts]$
-```
 
+```
 
 ## 3. Firewalling
 
@@ -91,15 +96,19 @@ UNCONN 0       0                [::1]:323            [::]:*     ino:20060 sk:5 c
 
 ➜ **Vous pouvez afficher l'état actuel de `firewalld`, le firewall de Rocky Linux, avec :**
 
-```bash
+```ps
+
 sudo firewall-cmd --list-all
+
 ```
 
 🌞 **Pour chacun des ports précédemment repérés...**
 
 - montrez qu'il existe une règle firewall qui autorise le trafic entrant sur ce port
 - ou pas ?
+  
 ```ps
+
 [cauchemar@localhost network-scripts]$ sudo firewall-cmd --list-all
 [sudo] password for cauchemar:
 public (active)
@@ -117,6 +126,7 @@ public (active)
   icmp-blocks:
   rich rules:
 [cauchemar@localhost network-scripts]$
+
 ```
 
 > **Attention !** Le firewall de Rocky Linux, `firewalld`, a deux concepts pour ouvrir un port TCP/UDP. Soit on ouvre... un port avec `--add-port` et on le voit apparaître devant `ports:`. Soit on ouvre un "service" avec `--add-service` et on le voit apparaître devant `services:`. Chaque "service" est donc un port ouvert (et à fermer potentiellement à la question suivante ;) ).
@@ -127,6 +137,7 @@ public (active)
 - pas besoin qu'un port soit ouvert si aucun service n'écoute dessus
 
   ```ps
+  
 [cauchemar@node1 ~]$ sudo firewall-cmd --list-all
 public (active)
   target: default
@@ -143,6 +154,7 @@ public (active)
   icmp-blocks:
   rich rules:
 [cauchemar@node1 ~]$
+
 ```
 
 🌞 **Pour toutes les applications qui sont en écoute sur TOUTES les adresses IP**
