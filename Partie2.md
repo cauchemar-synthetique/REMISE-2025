@@ -161,3 +161,13 @@ public (active)
 
 - dans Linux, ce sont les applications qui écoutent sur la pseudo-adresse IP `0.0.0.0` : ça signifie que toutes les adresses IP de la machine sont concernées
 - modifier la configuration de l'application pour n'écouter que une seule IP : celle qui est nécessaire
+
+```ps
+
+[cauchemar@node1 ~]$ sudo systemctl restart sshd
+[cauchemar@node1 ~]$ sudo ss -tulnp | grep '0.0.0.0'
+udp   UNCONN 0      0          127.0.0.1:323       0.0.0.0:*    users:(("chronyd",pid=733,fd=5))
+tcp   LISTEN 0      128        10.1.1.11:22        0.0.0.0:*    users:(("sshd",pid=1797,fd=3))
+[cauchemar@node1 ~]$
+
+```
