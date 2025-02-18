@@ -333,6 +333,48 @@ er7TFDSsklmipzCfqaBUzoh2e5aSt/VuVhDLTB5w05eC7IjSP3/zCYOySDDahvBYnDdomJJAFM/CGZaU
 
 > Il s'agit donc ici d'un utilisateur avec lequel on pourra pas se connecter à la machine (ni en console, ni en SSH).
 
+```ps
+[cauchemar@node1 ~]$ sudo useradd -g admins -M -s /sbin/nologin meow
+[cauchemar@node1 ~]$ getent passwd meow
+meow:x:1001:1001::/home/meow:/sbin/nologin
+[cauchemar@node1 ~]$ meow:x:1001:1002::/home/meow:/sbin/nologin
+-bash: meow:x:1001:1002::/home/meow:/sbin/nologin: No such file or directory
+[cauchemar@node1 ~]$ id meow
+uid=1001(meow) gid=1001(admins) groups=1001(admins)
+[cauchemar@node1 ~]$ uid=1001(meow) gid=1002(admins) groups=1002(admins)
+-bash: syntax error near unexpected token `('
+[cauchemar@node1 ~]$ su - meow
+Password:
+su: Authentication failure
+[cauchemar@node1 ~]$ su - meow
+Password:
+su: Authentication failure
+[cauchemar@node1 ~]$ cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+operator:x:11:0:operator:/root:/sbin/nologin
+games:x:12:100:games:/usr/games:/sbin/nologin
+ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
+nobody:x:65534:65534:Kernel Overflow User:/:/sbin/nologin
+tss:x:59:59:Account used for TPM access:/:/usr/sbin/nologin
+systemd-coredump:x:999:997:systemd Core Dumper:/:/sbin/nologin
+dbus:x:81:81:System message bus:/:/sbin/nologin
+sssd:x:998:996:User for sssd:/:/sbin/nologin
+chrony:x:997:995:chrony system user:/var/lib/chrony:/sbin/nologin
+sshd:x:74:74:Privilege-separated SSH:/usr/share/empty.sshd:/usr/sbin/nologin
+cauchemar:x:1000:1000:cauchemar:/home/cauchemar:/bin/bash
+tcpdump:x:72:72::/:/sbin/nologin
+nginx:x:996:993:Nginx web server:/var/lib/nginx:/sbin/nologin
+meow:x:1001:1001::/home/meow:/sbin/nologin
+```
+
 🌞 **Configuration `sudoers`**
 
 - ajouter une configuration `sudoers` pour que l'utilisateur `meow` puisse exécuter seulement et uniquement les commandes `ls`, `cat`, `less` et `more` en tant que votre utilisateur
