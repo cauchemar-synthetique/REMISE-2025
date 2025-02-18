@@ -71,6 +71,17 @@ dd if=/dev/zero of=/home/<TON_USER>/bigfile bs=4M count=2500
 
 - avec un `df -h`
 
+  ```ps
+
+  [root@node1 cauchemar]# dd if=/dev/zero of=/home/cauchemar/bigfile bs=4M count=2500
+dd: error writing '/home/cauchemar/bigfile': No space left on device
+1235+0 records in
+1234+0 records out
+5179555840 bytes (5.2 GB, 4.8 GiB) copied, 2.97327 s, 1.7 GB/s
+[root@node1 cauchemar]#
+
+```
+
 🌞 **Agrandir la partition**
 
 - avec des commandes LVM il faut agrandir le logical volume
@@ -81,8 +92,20 @@ dd if=/dev/zero of=/home/<TON_USER>/bigfile bs=4M count=2500
 
 - on va simuler encore avec un truc bourrin :
 
-```
-dd if=/dev/zero of=/home/<TON_USER>/bigfile bs=4M count=2500
+```ps
+[cauchemar@node1 ~]$ lsblk
+NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sr0          11:0    1  1.8G  0 rom
+nvme0n1     259:0    0   50G  0 disk
+├─nvme0n1p1 259:1    0   15G  0 part
+│ ├─rl-root 253:0    0   10G  0 lvm  /
+│ └─rl-home 253:1    0 30.5G  0 lvm  /home
+├─nvme0n1p2 259:2    0    5G  0 part /var
+├─nvme0n1p3 259:3    0    4G  0 part [SWAP]
+├─nvme0n1p4 259:4    0    1K  0 part
+├─nvme0n1p5 259:5    0  512M  0 part /boot
+└─nvme0n1p6 259:6    0 25.5G  0 part
+  └─rl-home 253:1    0 30.5G  0 lvm  /home
 ```
 
 > 2500x4M ça fait toujours 20G. Et ça fait toujours trop.
