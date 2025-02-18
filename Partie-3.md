@@ -84,14 +84,6 @@ dd: error writing '/home/cauchemar/bigfile': No space left on device
 
 🌞 **Agrandir la partition**
 
-- avec des commandes LVM il faut agrandir le logical volume
-- ensuite il faudra indiquer au système de fichier ext4 que la partition a été agrandie
-- prouvez avec un `df -h` que vous avez récupéré de l'espace en plus
-
-🌞 **Remplissez votre partition `/home`**
-
-- on va simuler encore avec un truc bourrin :
-
 ```ps
 [cauchemar@node1 ~]$ lsblk
 NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
@@ -114,13 +106,66 @@ nvme0n1     259:0    0   50G  0 disk
 
 🌞 **Utiliser ce nouveau disque pour étendre la partition `/home` de 20G**
 
-- dans l'ordre il faut :
-- indiquer à LVM qu'il y a un nouveau PV dispo
-- ajouter ce nouveau PV au VG existant
-- étendre le LV existant pour récupérer le nouvel espace dispo au sein du VG
-- indiquer au système de fichier ext4 que la partition a été agrandie
-- prouvez avec un `df -h` que vous avez récupéré de l'espace en plus
+```ps
+[cauchemar@node1 ~]$ sudo vgextend rl /dev/nvme0n2
+  Volume group "rl" successfully extended
+[cauchemar@node1 ~]$ lsblk
+NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sr0          11:0    1  1.8G  0 rom
+nvme0n1     259:0    0   50G  0 disk
+├─nvme0n1p1 259:1    0   15G  0 part
+│ ├─rl-root 253:0    0   10G  0 lvm  /
+│ └─rl-home 253:1    0 30.5G  0 lvm  /home
+├─nvme0n1p2 259:2    0    5G  0 part /var
+├─nvme0n1p3 259:3    0    4G  0 part [SWAP]
+├─nvme0n1p4 259:4    0    1K  0 part
+├─nvme0n1p5 259:5    0  512M  0 part /boot
+└─nvme0n1p6 259:6    0 25.5G  0 part
+  └─rl-home 253:1    0 30.5G  0 lvm  /home
+nvme0n2     259:7    0   40G  0 disk
+[cauchemar@node1 ~]$ sudo vgs
+  VG #PV #LV #SN Attr   VSize  VFree
+  rl   3   2   0 wz--n- 80.48g <40.00g
+[cauchemar@node1 ~]$ sudo lvextend -L+20G /dev/mapper/rl-home
+  Size of logical volume rl/home changed from <30.49 GiB (7805 extents) to <50.49 GiB (12925 extents).
+  Logical volume rl/home successfully resized.
+[cauchemar@node1 ~]$ sudo resize2fs /dev/mapper/rl-home
+resize2fs 1.46.5 (30-Dec-2021)
+Filesystem at /dev/mapper/rl-home is mounted on /home; on-line resizing required
+old_desc_blocks = 4, new_desc_blocks = 7
+The filesystem on /dev/mapper/rl-home is now 13235200 (4k) blocks long.
 
+[cauchemar@node1 ~]$ sudo vgs
+  VG #PV #LV #SN Attr   VSize  VFree
+  rl   3   2   0 wz--n- 80.48g <20.00g
+[cauchemar@node1 ~]$ lsblk
+NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sr0          11:0    1  1.8G  0 rom
+nvme0n1     259:0    0   50G  0 disk
+├─nvme0n1p1 259:1    0   15G  0 part
+│ ├─rl-root 253:0    0   10G  0 lvm  /
+│ └─rl-home 253:1    0 50.5G  0 lvm  /home
+├─nvme0n1p2 259:2    0    5G  0 part /var
+├─nvme0n1p3 259:3    0    4G  0 part [SWAP]
+├─nvme0n1p4 259:4    0    1K  0 part
+├─nvme0n1p5 259:5    0  512M  0 part /boot
+└─nvme0n1p6 259:6    0 25.5G  0 part
+  └─rl-home 253:1    0 50.5G  0 lvm  /home
+nvme0n2     259:7    0   40G  0 disk
+└─rl-home   253:1    0 50.5G  0 lvm  /home
+[cauchemar@node1 ~]$ df -h
+Filesystem           Size  Used Avail Use% Mounted on
+devtmpfs             4.0M     0  4.0M   0% /dev
+tmpfs                1.8G     0  1.8G   0% /dev/shm
+tmpfs                726M  9.1M  717M   2% /run
+/dev/mapper/rl-root  9.8G  1.3G  8.0G  14% /
+/dev/nvme0n1p2       4.9G  182M  4.4G   4% /var
+/dev/nvme0n1p5       488M  273M  179M  61% /boot
+/dev/mapper/rl-home   50G  4.9G   43G  11% /home
+tmpfs                363M     0  363M   0% /run/user/1000
+[cauchemar@node1 ~]$
+
+```
 ## 3. Prepare another partition
 
 Pour la suite du TP, on va préparer une dernière partition. Il devrait vous rester 20G de libre avec le disque de 40 que vous venez d'ajouter.
