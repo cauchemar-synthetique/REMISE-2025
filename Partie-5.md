@@ -29,7 +29,7 @@ Néanmoins nécessaire partout.
 root        1327  0.0  0.5  16792  9344 ?        Ss   11:10   0:00 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
 ```
 
-> On peut aussi obtenir l'info avec un `systemctl status` bien senti ;D
+> On peut aussi obtenir l'info avec un `systemctl status` 
 
 ```ps
 [cauchemar@node1 ~]$ systemctl status sshd | grep "Main PID"
@@ -46,9 +46,9 @@ tcp   LISTEN 0      128        10.1.1.11:33000      0.0.0.0:*    users:(("sshd",
 
 - prouvez que vous pouvez toujours vous connecter à la machine en SSH, sur ce nouveau port
 ```ps
-PS C:\Users\cleme> ssh -p 33000 dums@10.1.1.11
-dums@10.1.1.11 s password:
-Last login: Thu Feb 20 12:47:08 2025
+PS C:\Users\cauchemar> ssh -p 33000 cauchemar@10.1.1.11
+cauchemar@10.1.1.11 s password:
+Last login: Thu Feb 20 14:25:01 2025
 [cauchemar@node1 ~]$
 ```
 - expliquez pourquoi on considère parfois utile de changer le port d'écoute par défaut du serveur SSH
@@ -62,27 +62,27 @@ Evite les scans de bots ou tout autres attaques qui visent le port 22 par défau
 🌞 **Configurer une authentification par clé**
 
 ```ps
-PS C:\Users\cleme> ssh-keygen -t rsa -b 4096 -f C:\Users\cleme\.ssh\id_rsa
+PS C:\Users\cauchemar> ssh-keygen -t rsa -b 4096 -f C:\Users\cauchemar\.ssh\id_rsa
 
-PS C:\Users\cleme> cat ~/.ssh/id_rsa.pub | ssh -p 33000 dums@10.1.1.11 "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+PS C:\Users\cauchemar> cat ~/.ssh/id_rsa.pub | ssh -p 33000 cauchemar@10.1.1.11 "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
 
-PS C:\Users\cleme> ssh -p 33000 dums@10.1.1.11
-Last login: Thu Feb 20 13:03:41 2025 from 10.1.1.0
+PS C:\Users\cauchemar> ssh -p 33000 cauchemar@10.1.1.11
+Last login: Thu Feb 20 15:33:11 2025 from 10.1.1.0
 ```
 
 🌞 **Désactiver la connexion par password**
 ```ps
-[dums@node1 ~]$ sudo grep PasswordAuthentication /etc/ssh/sshd_config
+[cauchemar@node1 ~]$ sudo grep PasswordAuthentication /etc/ssh/sshd_config
 PasswordAuthentication no
 ```
 
 🌞 **Désactiver la connexion en tant que `root`**
 ```ps
-[dums@node1 ~]$ sudo grep PermitRootLogin /etc/ssh/sshd_config
+[cauchemar@node1 ~]$ sudo grep PermitRootLogin /etc/ssh/sshd_config
 PermitRootLogin no
 ```
 ```ps
-PS C:\Users\cleme> ssh -p 33000 root@10.1.1.11
+PS C:\Users\cauchemar> ssh -p 33000 root@10.1.1.11
 root@10.1.1.11: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
 ```
 
@@ -105,7 +105,7 @@ HostbasedAuthentication no
 🌞 **Configurer fail2ban**
 
 ```ps
-[dums@node1 ~]$ sudo nano /etc/fail2ban/jail.local
+[cauchemar@node1 ~]$ sudo nano /etc/fail2ban/jail.local
 [sshd]
 port    = ssh
 logpath = %(sshd_log)s
@@ -117,13 +117,13 @@ findtime = 300
 bantime = 600
 ```
 ```ps
-[dums@node1 ~]$ sudo systemctl restart fail2ban
+[cauchemar@node1 ~]$ sudo systemctl restart fail2ban
 ```
 
 🌞 **Prouvez que fail2ban est effectif**
 
 ```ps
-[dums@node1 ~]$ sudo fail2ban-client status sshd
+[cauchemar@node1 ~]$ sudo fail2ban-client status sshd
 Status for the jail: sshd
 |- Filter
 |  |- Currently failed: 1
@@ -137,10 +137,10 @@ Status for the jail: sshd
 - levez le ban avec une commande adaptée
 
 ```ps
-[dums@node1 ~]$ sudo fail2ban-client set sshd unbanip 10.1.1.0
+[cauchemar@node1 ~]$ sudo fail2ban-client set sshd unbanip 10.1.1.0
 1
 
-[dums@node1 ~]$ sudo fail2ban-client status sshd
+[cauchemar@node1 ~]$ sudo fail2ban-client status sshd
 Status for the jail: sshd
 |- Filter
 |  |- Currently failed: 1
@@ -163,7 +163,7 @@ L'idée est simple : écrire un script shell qui applique la configuration de ce
 Voilà le fichier -> [harden.sh](./harden.sh)
  
  ```ps
- [dums@node1 ~]$ sudo ./harden.sh
+ [cauchemar@node1 ~]$ sudo ./harden.sh
 active
 Status for the jail: sshd
 |- Filter
@@ -176,4 +176,3 @@ Status for the jail: sshd
    `- Banned IP list:
 ```
 
-Suivant -> [Partie 6](./part6.md)
