@@ -32,7 +32,7 @@ root        1327  0.0  0.5  16792  9344 ?        Ss   11:10   0:00 sshd: /usr/sb
 > On peut aussi obtenir l'info avec un `systemctl status` bien senti ;D
 
 ```ps
-[dums@node1 ~]$ systemctl status sshd | grep "Main PID"
+[cauchemar@node1 ~]$ systemctl status sshd | grep "Main PID"
    Main PID: 1327 (sshd)
 ```
 
@@ -40,7 +40,7 @@ root        1327  0.0  0.5  16792  9344 ?        Ss   11:10   0:00 sshd: /usr/sb
 
 - prouvez que votre changement a pris effet
 ```ps
-[dums@node1 ~]$ sudo ss -tulnp | grep 33000
+[cauchemar@node1 ~]$ sudo ss -tulnp | grep 33000
 tcp   LISTEN 0      128        10.1.1.11:33000      0.0.0.0:*    users:(("sshd",pid=1527,fd=3))
 ```
 
@@ -49,7 +49,7 @@ tcp   LISTEN 0      128        10.1.1.11:33000      0.0.0.0:*    users:(("sshd",
 PS C:\Users\cleme> ssh -p 33000 dums@10.1.1.11
 dums@10.1.1.11 s password:
 Last login: Thu Feb 20 12:47:08 2025
-[dums@node1 ~]$
+[cauchemar@node1 ~]$
 ```
 - expliquez pourquoi on considère parfois utile de changer le port d'écoute par défaut du serveur SSH
 
